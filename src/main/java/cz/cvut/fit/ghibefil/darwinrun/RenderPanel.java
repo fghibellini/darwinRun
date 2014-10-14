@@ -7,47 +7,54 @@ package cz.cvut.fit.ghibefil.darwinrun;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
-import sun.security.krb5.Config;
 
 /**
  *
  * @author ghibe
  */
 public class RenderPanel extends javax.swing.JPanel {
-    Body athlete;    
+    private Body athlete; 
+    Graphics offscreenGraphics;
     
     /**
      * Creates new form RenderPanel
      */
     public RenderPanel() {
         initComponents();
+        
+//        offscreenImage = createImage(400, 400);
+//        offscreenGraphics = offscreenImage.getGraphics();
     }
     
     @Override
     public void paint(Graphics g) {
+        Graphics buffer = g;
+        
         Rectangle rect = g.getClipBounds();
-        g.clearRect(0, 0, rect.width, rect.height);
+        buffer.clearRect(0, 0, rect.width, rect.height);
         if (athlete==null)
             return;
         
-        g.setColor(Color.red);
+        buffer.setColor(Color.red);
         
-        Vec2 pos = athlete.getPosition();
-        int x = (int) (pos.x * 2f);
-        int y = (int) (- pos.y * 2f);
-//        int x = 10;
-//        int y = 5;
-        //System.out.printf("rendering to %d %d on win of size %d %d\n", x, y, rect.width, rect.height);
-        g.fillRect(x,y, 10, 10);
+        Vec2 pos = athlete.getPosition(), speed = athlete.getLinearVelocity();
+        buffer.drawString("POS: [" + pos.x + ", " + pos.y + "]", 100, 100);
+        buffer.drawString("SPD: [" + speed.x + ", " + speed.y + "]", 100, 112);
         
+        int x = (int) (pos.x * getWidth() / MainWindow.SIMULATION_WIDTH);
+        int y = (int) ( (MainWindow.SIMULATION_HEIGHT - pos.y) * getHeight() / MainWindow.SIMULATION_HEIGHT);
+        System.out.printf("POINT: [%d, %d]\n SIM: [%d, %d]\nWINSIZE:[%d, %d]\n", x, y,  (int)pos.x,  (int)pos.y, rect.width, rect.height);
+        buffer.fillRect(x,y, 10, 10);
+        
+        //g.drawImage(offscreenImage,0,0, this); 
     }
     
     public void setRunner(Body athlete) {
         this.athlete = athlete;
+        this.repaint();
     }
 
     /**

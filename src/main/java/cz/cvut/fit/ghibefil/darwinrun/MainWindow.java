@@ -5,24 +5,39 @@
  */
 package cz.cvut.fit.ghibefil.darwinrun;
 
+import org.jbox2d.common.Vec2;
+
+
 /**
  *
  * @author ghibe
  */
 public class MainWindow extends javax.swing.JFrame {
+    static int SIMULATION_HEIGHT = 10;
+    static int SIMULATION_WIDTH = 10;
+    
+    Simulation sim;
     
     /**
      * Creates new form MainWindow
      */
     public MainWindow() {
         initComponents();
+        
+        sim = new Simulation(renderPanel1);
+        
+               
+        renderPanel1.setRunner(sim.getRunner());
+   
+        
         setVisible(true);
     }
     
-    public RenderPanel getRenderPanel() {
-        return renderPanel1;
+    public static void main(String[] args) {
+        new MainWindow();
     }
- 
+    
+     
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -34,6 +49,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         renderPanel1 = new cz.cvut.fit.ghibefil.darwinrun.RenderPanel();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DarwinRun");
@@ -56,6 +72,14 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        jButton2.setText("Move to top");
+        jButton2.setToolTipText("");
+        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jButton2MouseClicked(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -63,7 +87,9 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(renderPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 127, Short.MAX_VALUE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -72,7 +98,9 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jButton1)
-                .addContainerGap(366, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton2)
+                .addContainerGap(335, Short.MAX_VALUE))
         );
 
         pack();
@@ -80,12 +108,20 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        Main.startSimulation();
+        new Thread(sim, "simulation1").start();
     }//GEN-LAST:event_jButton1MouseClicked
+
+    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
+        // TODO add your handling code here:
+        System.out.println("clicked");
+        sim.getRunner().setTransform(new Vec2(5f, 10f), sim.getRunner().getAngle());
+        sim.getRunner().setAwake(true);
+    }//GEN-LAST:event_jButton2MouseClicked
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private cz.cvut.fit.ghibefil.darwinrun.RenderPanel renderPanel1;
     // End of variables declaration//GEN-END:variables
 }
