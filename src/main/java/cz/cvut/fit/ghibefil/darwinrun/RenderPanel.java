@@ -51,13 +51,10 @@ public class RenderPanel extends java.awt.Canvas implements Runnable {
             Graphics buffer = strategy.getDrawGraphics();
             
             buffer.setColor(Color.black);
-            buffer.fillRect(0, 0, 400, 400);
+            buffer.fillRect(0, 0, getWidth(), getHeight());
 
-//            Rectangle rect = getBounds();
-//            System.out.printf("rectangle: %d, %d", rect.width, rect.height);            
-            
             for (Drawable d : drawables)
-                d.draw(buffer);
+                d.draw(buffer, this);
 
             buffer.dispose();
             strategy.show();

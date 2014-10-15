@@ -6,6 +6,7 @@
 package cz.cvut.fit.ghibefil.darwinrun;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import org.jbox2d.common.Vec2;
@@ -21,8 +22,8 @@ public class AthleteRenderer implements Drawable {
         this.athlete = athlete;
     }
     
-    public void draw(Graphics g) {
-        Rectangle bufferSize = new Rectangle(400, 400); //g.getClipBounds();
+    public void draw(Graphics g, Component c) {
+        Rectangle bufferSize = new Rectangle(c.getWidth(), c.getHeight()); //g.getClipBounds();
                 
         Vec2 pos = athlete.getPoints().center;
         

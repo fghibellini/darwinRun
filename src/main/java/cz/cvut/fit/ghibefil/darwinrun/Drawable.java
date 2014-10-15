@@ -5,6 +5,7 @@
  */
 package cz.cvut.fit.ghibefil.darwinrun;
 
+import java.awt.Component;
 import java.awt.Graphics;
 
 /**
@@ -12,5 +13,7 @@ import java.awt.Graphics;
  * @author ghibe
  */
 public interface Drawable {    
-    public void draw(Graphics g);
+    // passing even the component based on
+    // http://www.dreamincode.net/forums/topic/179427-calling-getwidth-or-getheight-on-a-graphics-object/
+    public void draw(Graphics g, Component c);
 }
