@@ -124,8 +124,8 @@ public class MainWindow extends javax.swing.JFrame {
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
         // TODO add your handling code here:
         System.out.println("clicked");
-        sim.getRunner().setTransform(new Vec2(5f, 10f), sim.getRunner().getAngle());
-        sim.getRunner().setAwake(true);
+        sim.getRunner().reset();
+        //sim.getRunner().setAwake(true);
     }//GEN-LAST:event_jButton2MouseClicked
 
     

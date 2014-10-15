@@ -17,7 +17,7 @@ import org.jbox2d.dynamics.Body;
  * @author ghibe
  */
 public class RenderPanel extends java.awt.Canvas implements Runnable {
-     private Body athlete;
+     private Athlete athlete;
      private BufferStrategy strategy;
     
     /**
@@ -35,7 +35,7 @@ public class RenderPanel extends java.awt.Canvas implements Runnable {
         new Thread(this, "draw thread").start();
     }
     
-    public void setRunner(Body athlete) {
+    public void setRunner(Athlete athlete) {
         this.athlete = athlete;
     }
     
@@ -56,7 +56,7 @@ public class RenderPanel extends java.awt.Canvas implements Runnable {
 
             buffer.setColor(Color.red);
 
-            Vec2 pos = athlete.getPosition(), speed = athlete.getLinearVelocity();
+            Vec2 pos = athlete.getPoints().center, speed = pos;
             buffer.drawString("POS: [" + pos.x + ", " + pos.y + "]", 100, 100);
             buffer.drawString("SPD: [" + speed.x + ", " + speed.y + "]", 100, 112);
 

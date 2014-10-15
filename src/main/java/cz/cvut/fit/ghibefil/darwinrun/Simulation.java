@@ -25,7 +25,7 @@ public class Simulation implements Runnable {
         
     JComponent renderer;
     World world;
-    Body athlete;
+    Athlete athlete;
     
     public Simulation() {
         //this.renderer = renderer;
@@ -44,34 +44,19 @@ public class Simulation implements Runnable {
         groundBody.createFixture(groundBox, 0f);
         
         
-        
-        // Dynamic body - box        
-        BodyDef dynBodyDef = new BodyDef();
-        dynBodyDef.type = BodyType.DYNAMIC;
-        dynBodyDef.position.set(5f, 10f);
-        athlete = world.createBody(dynBodyDef);
-        
-        PolygonShape dynBodyShape = new PolygonShape();
-        dynBodyShape.setAsBox(0.5f, 0.5f);
-        
-        FixtureDef dynBodyFixure = new FixtureDef();
-        dynBodyFixure.shape = dynBodyShape;
-        dynBodyFixure.density = 1f;
-        dynBodyFixure.friction = 0.3f;        
-        athlete.createFixture(dynBodyFixure);
+        athlete = new Athlete(world);
     }
     
     public void run() {
         while (true) {
             world.step(timeStep, velocityIterations, positionIterations);
-            Vec2 pos = athlete.getPosition();
+            Vec2 pos = athlete.getPoints().center;
             System.out.printf("[%f, %f]\n", pos.x, pos.y);
-            //renderer.repaint();
             try { Thread.sleep(1000/60); } catch(InterruptedException e) {}
         }
     }
     
-    public Body getRunner() {
+    public Athlete getRunner() {
         return athlete;
     }
               
