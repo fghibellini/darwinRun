@@ -36,11 +36,11 @@ public class Simulation implements Runnable {
         
         // Static body - ground
         BodyDef groundBodyDef = new BodyDef();        
-        groundBodyDef.position.set(0f, -5);        
+        groundBodyDef.position.set(0f, -5);   
         Body groundBody = world.createBody(groundBodyDef);     
         
         PolygonShape groundBox = new PolygonShape();
-        groundBox.setAsBox(50f,5f);        
+        groundBox.setAsBox(50f,5f); 
         groundBody.createFixture(groundBox, 0f);
         
         

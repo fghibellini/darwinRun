@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferStrategy;
+import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
 
@@ -17,53 +18,46 @@ import org.jbox2d.dynamics.Body;
  * @author ghibe
  */
 public class RenderPanel extends java.awt.Canvas implements Runnable {
-     private Athlete athlete;
      private BufferStrategy strategy;
+     private ArrayList<Drawable> drawables = new ArrayList<>();
     
     /**
      * Creates new form RenderPanel
      */
     public RenderPanel() {
         setIgnoreRepaint(true);
-        setBounds(0, 0, 600, 500);        
+        setBounds(0, 0, 400, 400);        
     }
     
     public void initStrategy() {
         createBufferStrategy(2);
         strategy = getBufferStrategy();
-        System.out.println("creating canvas thread!");
         new Thread(this, "draw thread").start();
     }
     
-    public void setRunner(Athlete athlete) {
-        this.athlete = athlete;
+    public void resetDrawables() {
+        drawables.clear();
+    }
+    
+    public void addDrawable(Drawable obj) {
+        drawables.add(obj);
     }
     
      @Override
     public void run() {
         while (true) {
-            System.out.println("repaint of canvas");
             if (strategy==null)
                 initStrategy();
             Graphics buffer = strategy.getDrawGraphics();
-
-            Rectangle rect = getBounds();
-            System.out.printf("rectangle: %d, %d", rect.width, rect.height);
+            
             buffer.setColor(Color.black);
-            buffer.fillRect(0, 0, rect.width, rect.height);
-            if (athlete==null)
-                return;
+            buffer.fillRect(0, 0, 400, 400);
 
-            buffer.setColor(Color.red);
-
-            Vec2 pos = athlete.getPoints().center, speed = pos;
-            buffer.drawString("POS: [" + pos.x + ", " + pos.y + "]", 100, 100);
-            buffer.drawString("SPD: [" + speed.x + ", " + speed.y + "]", 100, 112);
-
-            int x = (int) (pos.x * getWidth() / MainWindow.SIMULATION_WIDTH);
-            int y = (int) ( (MainWindow.SIMULATION_HEIGHT - pos.y) * getHeight() / MainWindow.SIMULATION_HEIGHT);
-            System.out.printf("POINT: [%d, %d]\n SIM: [%d, %d]\nWINSIZE:[%d, %d]\n", x, y,  (int)pos.x,  (int)pos.y, rect.width, rect.height);
-            buffer.fillRect(x,y, 10, 10);
+//            Rectangle rect = getBounds();
+//            System.out.printf("rectangle: %d, %d", rect.width, rect.height);            
+            
+            for (Drawable d : drawables)
+                d.draw(buffer);
 
             buffer.dispose();
             strategy.show();

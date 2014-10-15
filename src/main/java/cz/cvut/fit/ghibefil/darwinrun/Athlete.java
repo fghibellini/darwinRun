@@ -28,8 +28,9 @@ public class Athlete {
         LIMB_FICTURE_DEF.shape = LIMB_SHAPE;
         LIMB_FICTURE_DEF.density = 1f;
         LIMB_FICTURE_DEF.friction = 0.3f;
-        LIMB_FICTURE_DEF.filter.categoryBits = 0x0001;
-        LIMB_FICTURE_DEF.filter.categoryBits = 0x0000;
+        LIMB_FICTURE_DEF.restitution = 1f;
+        LIMB_FICTURE_DEF.filter.categoryBits = 0x0002;
+        LIMB_FICTURE_DEF.filter.maskBits = 0x0001;
     }
     
     World world;
@@ -37,14 +38,11 @@ public class Athlete {
     
     public Athlete(World world) {
         this.world = world;
-        System.out.println("creating athlete!");
         torso = createLimb();
     }
     
     public AthletePoints getPoints() {
-        
         Vec2 t = torso.getPosition();
-        System.out.println("get points: " + t);
         return new AthletePoints(t, null, null, null, null, null, null, null, null);        
     }
     
@@ -54,6 +52,7 @@ public class Athlete {
         dynBodyDef.type = BodyType.DYNAMIC;
         dynBodyDef.position.set(5f, 5f);
         dynBodyDef.allowSleep = false;
+        dynBodyDef.linearDamping = 0.1f;
         Body body = world.createBody(dynBodyDef);
         
         body.createFixture(LIMB_FICTURE_DEF);
