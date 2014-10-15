@@ -27,8 +27,8 @@ public class Simulation implements Runnable {
     World world;
     Body athlete;
     
-    public Simulation(JComponent renderer) {
-        this.renderer = renderer;
+    public Simulation() {
+        //this.renderer = renderer;
         
         // gravity & world
         Vec2 g0 = new Vec2(0f, -10f);
@@ -66,12 +66,8 @@ public class Simulation implements Runnable {
             world.step(timeStep, velocityIterations, positionIterations);
             Vec2 pos = athlete.getPosition();
             System.out.printf("[%f, %f]\n", pos.x, pos.y);
-            renderer.repaint();
-            try {
-                Thread.sleep(1000/60);
-            } catch(InterruptedException e) {
-                // the trehad is already in a sleep state we can ignore this
-            }
+            //renderer.repaint();
+            try { Thread.sleep(1000/60); } catch(InterruptedException e) {}
         }
     }
     
