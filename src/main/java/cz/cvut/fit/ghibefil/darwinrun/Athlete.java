@@ -14,53 +14,101 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 /**
  *
  * @author ghibe
  */
 public class Athlete {
-    static final PolygonShape LIMB_SHAPE;
-    static final FixtureDef LIMB_FICTURE_DEF;
+    
+    static final float HALF_TORSO_LENGTH = .3f;
+    static final float HALF_THIGH_LENGTH = .3f;
+    
+    static final FixtureDef TORSO_FICTURE_DEF, LEG_FICTURE_DEF;
     static {
-        LIMB_SHAPE = new PolygonShape();
-        LIMB_SHAPE.setAsBox(.125f, .3f);
+        PolygonShape TORSO_SHAPE = new PolygonShape();
+        TORSO_SHAPE.setAsBox(.125f, HALF_TORSO_LENGTH);
         
-        LIMB_FICTURE_DEF = new FixtureDef();
-        LIMB_FICTURE_DEF.shape = LIMB_SHAPE;
-        LIMB_FICTURE_DEF.density = 1f;
-        LIMB_FICTURE_DEF.friction = 0.3f;
-        LIMB_FICTURE_DEF.restitution = 1f;
-        LIMB_FICTURE_DEF.filter.categoryBits = 0x0002;
-        LIMB_FICTURE_DEF.filter.maskBits = 0x0001;
+        TORSO_FICTURE_DEF = new FixtureDef();
+        TORSO_FICTURE_DEF.shape = TORSO_SHAPE;
+        TORSO_FICTURE_DEF.density = 1f;
+        TORSO_FICTURE_DEF.friction = 0.3f;
+        TORSO_FICTURE_DEF.restitution = 1f;
+        TORSO_FICTURE_DEF.filter.categoryBits = 0x0002;
+        TORSO_FICTURE_DEF.filter.maskBits = 0x0003;
+        
+        PolygonShape LEG_SHAPE = new PolygonShape();
+        LEG_SHAPE.setAsBox(.125f, HALF_THIGH_LENGTH);
+        
+        LEG_FICTURE_DEF = new FixtureDef();
+        LEG_FICTURE_DEF.shape = LEG_SHAPE;
+        LEG_FICTURE_DEF.density = 1f;
+        LEG_FICTURE_DEF.friction = 0.3f;
+        LEG_FICTURE_DEF.restitution = 0.9f;
+        LEG_FICTURE_DEF.filter.categoryBits = 0x0002;
+        LEG_FICTURE_DEF.filter.maskBits = 0x0003;
     }
     
     World world;
-    Body torso;
+    Vec2 torsoCenter;
+    Body torso, left_leg;
     
-    public Athlete(World world) {
+    public Athlete(World world, Vec2 torsoCenter) {
         this.world = world;
-        torso = createLimb();
+        this.torsoCenter = torsoCenter;
+        
+        torso = createTorso();
+        left_leg = createLeg();
+        
+//        RevoluteJointDef leftLegJoint = new RevoluteJointDef();
+//        leftLegJoint.initialize(torso, left_leg, new Vec2(0, HALF_TORSO_LENGTH));
+//        world.createJoint(leftLegJoint);
     }
     
     public AthletePoints getPoints() {
-        float torsoAngle = torso.getAngle();
-        Vec2 torsoUpVector = new Vec2((float) sin(torsoAngle),(float) cos(torsoAngle)).mul(.3f);
+        float torsoAngle = (float) (torso.getAngle() + Math.PI / 2.);        
+        Vec2 torsoUpVector = new Vec2((float) cos(torsoAngle),(float) sin(torsoAngle)).mul(HALF_TORSO_LENGTH);
+        
         Vec2 pTorso = torso.getPosition().add(torsoUpVector),
              pHip = torso.getPosition().add(torsoUpVector.mul(-1f));
-        return new AthletePoints(pTorso, pHip, null, null, null, null, null, null, null, null);        
+        
+        Vec2 pLeftKnee = left_leg.getPosition();
+        
+        float legAngle = (float) (left_leg.getAngle() + Math.PI / 2.);
+        Vec2 legUpVector = new Vec2((float) cos(legAngle),(float) sin(legAngle)).mul(HALF_THIGH_LENGTH);
+        Vec2 pLeftAncle = left_leg.getPosition().add(legUpVector);
+        
+        return new AthletePoints(pTorso, pHip, null, null, null, null, pLeftKnee, null, pLeftAncle, null);        
     }
     
-    private Body createLimb() {
+    private Body createTorso() {
         // Dynamic body - box        
         BodyDef dynBodyDef = new BodyDef();
         dynBodyDef.type = BodyType.DYNAMIC;
-        dynBodyDef.position.set(5f, 1.25f);
+        dynBodyDef.position.set(torsoCenter.x, torsoCenter.y);
         dynBodyDef.allowSleep = false;
-        dynBodyDef.linearDamping = 0.1f;
+        //dynBodyDef.linearDamping = 0.1f;
+        //dynBodyDef.fixedRotation = true;
+        //dynBodyDef.bullet = true; // might need to turn on in case high speeds are reached to prevent tunneling
         Body body = world.createBody(dynBodyDef);
         
-        body.createFixture(LIMB_FICTURE_DEF);
+        body.createFixture(TORSO_FICTURE_DEF);
+        return body;
+    }
+    
+    private Body createLeg() {
+        // Dynamic body - box        
+        BodyDef dynBodyDef = new BodyDef();
+        dynBodyDef.type = BodyType.DYNAMIC;
+        dynBodyDef.position.set(torsoCenter.x, torsoCenter.y - HALF_TORSO_LENGTH - HALF_THIGH_LENGTH);
+        dynBodyDef.allowSleep = false;
+        //dynBodyDef.linearDamping = 0.1f;
+        //dynBodyDef.fixedRotation = true;
+        //dynBodyDef.bullet = true; // might need to turn on in case high speeds are reached to prevent tunneling
+        Body body = world.createBody(dynBodyDef);
+        
+        body.createFixture(LEG_FICTURE_DEF);
         return body;
     }
     
@@ -69,7 +117,7 @@ public class Athlete {
     }
        
     public void reset() {
-        torso.setTransform(new Vec2(5f, 10f), .3f);
+        torso.setTransform(torsoCenter/*.add(new Vec2(-1f, 1f))*/, 0);
         //torso.setTransform(new Vec2(5f, 10f), torso.getAngle());
     }
 }

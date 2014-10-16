@@ -26,9 +26,21 @@ public class AthleteRenderer implements Drawable {
     @Override
     public void draw(Graphics g, Component c) {
         Dimension bufferSize = new Dimension(c.getWidth(), c.getHeight()); //g.getClipBounds();
-                
+        
+        Vec2 torsoVec = athlete.getPoints().torso;
+        Vec2 hipsVec = athlete.getPoints().hips;
+        Vec2 torsoPerpVec = torsoVec.sub(hipsVec);
+        torsoPerpVec.set(torsoPerpVec.y, -torsoPerpVec.x);
+        torsoPerpVec.normalize();
+        Point torsoPerp1 = convertCoordinates(torsoVec.add(torsoPerpVec.mul(.125f)), bufferSize);
+        Point torsoPerp2 = convertCoordinates(torsoVec.add(torsoPerpVec.mul(-.125f)), bufferSize);
+        Point torsoPerp3 = convertCoordinates(hipsVec.add(torsoPerpVec.mul(.125f)), bufferSize);
+        Point torsoPerp4 = convertCoordinates(hipsVec.add(torsoPerpVec.mul(-.125f)), bufferSize);
+        
         Point torso = convertCoordinates(athlete.getPoints().torso, bufferSize);
         Point hips = convertCoordinates(athlete.getPoints().hips, bufferSize);
+        Point leftKnee = convertCoordinates(athlete.getPoints().leftKnee, bufferSize);
+        Point leftAncle = convertCoordinates(athlete.getPoints().leftAncle, bufferSize);
         
         g.setColor(Color.red);
         g.drawString(String.format("POS: [%.2f, %.2f]", athlete.getPoints().torso.x, athlete.getPoints().torso.y), 10, 15);
@@ -38,7 +50,20 @@ public class AthleteRenderer implements Drawable {
         
         //System.out.printf("POINT: [%d, %d]\n SIM: [%d, %d]\n\n", x, y,  (int)pos.x,  (int)pos.y);
         //g.fillRect(x,y, 10, 10);
+        
+        // torso
+        g.setColor(Color.green);
         g.drawLine(torso.x,torso.y, hips.x, hips.y);
+        g.setColor(Color.yellow);
+        g.drawLine(torsoPerp1.x,torsoPerp1.y, torsoPerp2.x, torsoPerp2.y);
+        g.drawLine(torsoPerp3.x,torsoPerp3.y, torsoPerp4.x, torsoPerp4.y);
+        g.drawLine(torsoPerp2.x,torsoPerp2.y, torsoPerp4.x, torsoPerp4.y);
+        g.drawLine(torsoPerp1.x,torsoPerp1.y, torsoPerp3.x, torsoPerp3.y);
+        // leftThigh
+        g.setColor(Color.red);
+        g.drawLine(hips.x, hips.y, leftKnee.x, leftKnee.y);
+        g.setColor(Color.yellow);
+        g.drawLine(leftAncle.x, leftAncle.y, leftKnee.x, leftKnee.y);
     }
     
     private Point convertCoordinates(Vec2 v, Dimension bufferSize) {
