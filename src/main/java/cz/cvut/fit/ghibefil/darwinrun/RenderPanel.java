@@ -20,6 +20,8 @@ import org.jbox2d.dynamics.Body;
 public class RenderPanel extends java.awt.Canvas implements Runnable {
      private BufferStrategy strategy;
      private ArrayList<Drawable> drawables = new ArrayList<>();
+     private Simulation simulation;
+     private FPSCounter fpsCounter = new FPSCounter(40);
     
     /**
      * Creates new form RenderPanel
@@ -43,6 +45,10 @@ public class RenderPanel extends java.awt.Canvas implements Runnable {
         drawables.add(obj);
     }
     
+    public void setSimulation(Simulation simulation) {
+        this.simulation = simulation;
+    }
+    
      @Override
     public void run() {
         while (true) {
@@ -52,6 +58,10 @@ public class RenderPanel extends java.awt.Canvas implements Runnable {
             
             buffer.setColor(Color.black);
             buffer.fillRect(0, 0, getWidth(), getHeight());
+            
+            buffer.setColor(Color.red);
+            buffer.drawString("RPS: " + simulation.getRps(), 10, 45);
+            buffer.drawString("FPS: " + fpsCounter.getFPS(), 10, 60);
 
             for (Drawable d : drawables)
                 d.draw(buffer, this);
@@ -59,7 +69,9 @@ public class RenderPanel extends java.awt.Canvas implements Runnable {
             buffer.dispose();
             strategy.show();
             
-            try { Thread.sleep(1000/20); } catch(Exception e) {}
+            fpsCounter.tick();
+            
+            try { Thread.sleep(1000/60); } catch(Exception e) {}
         }
     }
 }

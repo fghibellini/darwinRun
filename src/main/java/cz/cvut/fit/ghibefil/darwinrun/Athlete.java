@@ -58,6 +58,10 @@ public class Athlete {
         body.createFixture(LIMB_FICTURE_DEF);
         return body;
     }
+    
+    public float getAngle() {
+        return torso.getAngle();
+    }
        
     public void reset() {
         torso.setTransform(new Vec2(5f, 10f), torso.getAngle());

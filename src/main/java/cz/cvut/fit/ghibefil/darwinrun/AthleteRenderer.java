@@ -28,13 +28,14 @@ public class AthleteRenderer implements Drawable {
         Vec2 pos = athlete.getPoints().center;
         
         g.setColor(Color.red);
-        g.drawString("POS: [" + pos.x + ", " + pos.y + "]", 10, 15);
+        g.drawString(String.format("POS: [%.2f, %.2f]", pos.x, pos.y), 10, 15);
+        g.drawString(String.format("ANG: %.2f",athlete.getAngle() / Math.PI * 180.0), 10, 30);
         
         g.drawRect(0, 0, bufferSize.width - 1, bufferSize.height - 1);
         
         int x = (int) (pos.x * bufferSize.width / MainWindow.SIMULATION_WIDTH);
         int y = (int) ( (MainWindow.SIMULATION_HEIGHT - pos.y) * bufferSize.height / MainWindow.SIMULATION_HEIGHT);
-        System.out.printf("POINT: [%d, %d]\n SIM: [%d, %d]\n\n", x, y,  (int)pos.x,  (int)pos.y);
+        //System.out.printf("POINT: [%d, %d]\n SIM: [%d, %d]\n\n", x, y,  (int)pos.x,  (int)pos.y);
         g.fillRect(x,y, 10, 10);
     }
 }

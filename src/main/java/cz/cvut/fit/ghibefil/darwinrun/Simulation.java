@@ -27,6 +27,8 @@ public class Simulation implements Runnable {
     World world;
     Athlete athlete;
     
+    final FPSCounter rpsCounter = new FPSCounter(10);
+    
     public Simulation() {
         //this.renderer = renderer;
         
@@ -42,23 +44,31 @@ public class Simulation implements Runnable {
         PolygonShape groundBox = new PolygonShape();
         groundBox.setAsBox(50f,5f); 
         groundBody.createFixture(groundBox, 0f);
-        
-        
+                
         athlete = new Athlete(world);
     }
     
     public void run() {
+                
         while (true) {
             world.step(timeStep, velocityIterations, positionIterations);
             Vec2 pos = athlete.getPoints().center;
-            System.out.printf("[%f, %f]\n", pos.x, pos.y);
+            //System.out.printf("[%f, %f]\n", pos.x, pos.y);
+            
+            rpsCounter.tick();
+            
             try { Thread.sleep(1000/60); } catch(InterruptedException e) {}
         }
     }
     
+    //sampleRate/timeSpent = rps/1000
+    
     public Athlete getRunner() {
         return athlete;
     }
-              
+    
+    public int getRps() {
+        return rpsCounter.getFPS();
+    }              
                 
 }

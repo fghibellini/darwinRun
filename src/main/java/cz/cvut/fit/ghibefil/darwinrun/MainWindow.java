@@ -26,7 +26,8 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
         
         sim = new Simulation();        
-               
+        
+        renderPanel1.setSimulation(sim);
         renderPanel1.addDrawable(new AthleteRenderer(sim.getRunner()));   
         
         setVisible(true);
