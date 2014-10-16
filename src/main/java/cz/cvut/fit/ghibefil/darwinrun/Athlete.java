@@ -39,7 +39,7 @@ public class Athlete {
         TORSO_FICTURE_DEF.filter.maskBits = 0x0003;
         
         PolygonShape LEG_SHAPE = new PolygonShape();
-        LEG_SHAPE.setAsBox(.125f, HALF_THIGH_LENGTH);
+        LEG_SHAPE.setAsBox(.110f, HALF_THIGH_LENGTH);
         
         LEG_FICTURE_DEF = new FixtureDef();
         LEG_FICTURE_DEF.shape = LEG_SHAPE;
@@ -61,9 +61,12 @@ public class Athlete {
         torso = createTorso();
         left_leg = createLeg();
         
-//        RevoluteJointDef leftLegJoint = new RevoluteJointDef();
-//        leftLegJoint.initialize(torso, left_leg, new Vec2(0, HALF_TORSO_LENGTH));
-//        world.createJoint(leftLegJoint);
+        RevoluteJointDef leftLegJoint = new RevoluteJointDef();
+        leftLegJoint.initialize(torso, left_leg, new Vec2(torsoCenter.x, torsoCenter.y - HALF_TORSO_LENGTH));
+        leftLegJoint.lowerAngle = (float) -Math.PI/3f;
+        leftLegJoint.upperAngle = (float) Math.PI/3f;
+        leftLegJoint.enableLimit = true;
+        world.createJoint(leftLegJoint);
     }
     
     public AthletePoints getPoints() {
@@ -73,13 +76,16 @@ public class Athlete {
         Vec2 pTorso = torso.getPosition().add(torsoUpVector),
              pHip = torso.getPosition().add(torsoUpVector.mul(-1f));
         
-        Vec2 pLeftKnee = left_leg.getPosition();
-        
-        float legAngle = (float) (left_leg.getAngle() + Math.PI / 2.);
-        Vec2 legUpVector = new Vec2((float) cos(legAngle),(float) sin(legAngle)).mul(HALF_THIGH_LENGTH);
-        Vec2 pLeftAncle = left_leg.getPosition().add(legUpVector);
+        Vec2 pLeftKnee = radialFrom(left_leg.getPosition(), pHip, HALF_THIGH_LENGTH);
+        Vec2 pLeftAncle = pHip;
         
         return new AthletePoints(pTorso, pHip, null, null, null, null, pLeftKnee, null, pLeftAncle, null);        
+    }
+    
+    private static Vec2 radialFrom(Vec2 v, Vec2 from, float distance) {
+        Vec2 direction = v.sub(from);
+        direction.normalize();
+        return v.add(direction.mulLocal(distance));
     }
     
     private Body createTorso() {
