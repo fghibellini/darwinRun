@@ -7,8 +7,9 @@ package cz.cvut.fit.ghibefil.darwinrun;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Rectangle;
+import java.awt.Point;
 import org.jbox2d.common.Vec2;
 
 /**
@@ -22,20 +23,27 @@ public class AthleteRenderer implements Drawable {
         this.athlete = athlete;
     }
     
+    @Override
     public void draw(Graphics g, Component c) {
-        Rectangle bufferSize = new Rectangle(c.getWidth(), c.getHeight()); //g.getClipBounds();
+        Dimension bufferSize = new Dimension(c.getWidth(), c.getHeight()); //g.getClipBounds();
                 
-        Vec2 pos = athlete.getPoints().center;
+        Point torso = convertCoordinates(athlete.getPoints().torso, bufferSize);
+        Point hips = convertCoordinates(athlete.getPoints().hips, bufferSize);
         
         g.setColor(Color.red);
-        g.drawString(String.format("POS: [%.2f, %.2f]", pos.x, pos.y), 10, 15);
+        g.drawString(String.format("POS: [%.2f, %.2f]", athlete.getPoints().torso.x, athlete.getPoints().torso.y), 10, 15);
         g.drawString(String.format("ANG: %.2f°",(athlete.getAngle() / Math.PI * 180.0)%360), 10, 30);
         
         g.drawRect(0, 0, bufferSize.width - 1, bufferSize.height - 1);
         
-        int x = (int) (pos.x * bufferSize.width / MainWindow.SIMULATION_WIDTH);
-        int y = (int) ( (MainWindow.SIMULATION_HEIGHT - pos.y) * bufferSize.height / MainWindow.SIMULATION_HEIGHT);
         //System.out.printf("POINT: [%d, %d]\n SIM: [%d, %d]\n\n", x, y,  (int)pos.x,  (int)pos.y);
-        g.fillRect(x,y, 10, 10);
+        //g.fillRect(x,y, 10, 10);
+        g.drawLine(torso.x,torso.y, hips.x, hips.y);
+    }
+    
+    private Point convertCoordinates(Vec2 v, Dimension bufferSize) {
+        int x = (int) (v.x * bufferSize.width / MainWindow.SIMULATION_WIDTH);
+        int y = (int) ( (MainWindow.SIMULATION_HEIGHT - v.y) * bufferSize.height / MainWindow.SIMULATION_HEIGHT);
+        return new Point(x, y);
     }
 }

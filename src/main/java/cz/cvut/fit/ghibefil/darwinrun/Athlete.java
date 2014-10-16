@@ -5,6 +5,8 @@
  */
 package cz.cvut.fit.ghibefil.darwinrun;
 
+import static java.lang.Math.cos;
+import static java.lang.Math.sin;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -22,7 +24,7 @@ public class Athlete {
     static final FixtureDef LIMB_FICTURE_DEF;
     static {
         LIMB_SHAPE = new PolygonShape();
-        LIMB_SHAPE.setAsBox(0.5f, 1f);
+        LIMB_SHAPE.setAsBox(.125f, .3f);
         
         LIMB_FICTURE_DEF = new FixtureDef();
         LIMB_FICTURE_DEF.shape = LIMB_SHAPE;
@@ -42,15 +44,18 @@ public class Athlete {
     }
     
     public AthletePoints getPoints() {
-        Vec2 t = torso.getPosition();
-        return new AthletePoints(t, null, null, null, null, null, null, null, null);        
+        float torsoAngle = torso.getAngle();
+        Vec2 torsoUpVector = new Vec2((float) sin(torsoAngle),(float) cos(torsoAngle)).mul(.3f);
+        Vec2 pTorso = torso.getPosition().add(torsoUpVector),
+             pHip = torso.getPosition().add(torsoUpVector.mul(-1f));
+        return new AthletePoints(pTorso, pHip, null, null, null, null, null, null, null, null);        
     }
     
     private Body createLimb() {
         // Dynamic body - box        
         BodyDef dynBodyDef = new BodyDef();
         dynBodyDef.type = BodyType.DYNAMIC;
-        dynBodyDef.position.set(5f, 5f);
+        dynBodyDef.position.set(5f, 1.25f);
         dynBodyDef.allowSleep = false;
         dynBodyDef.linearDamping = 0.1f;
         Body body = world.createBody(dynBodyDef);
@@ -64,6 +69,7 @@ public class Athlete {
     }
        
     public void reset() {
-        torso.setTransform(new Vec2(5f, 10f), torso.getAngle());
+        torso.setTransform(new Vec2(5f, 10f), .3f);
+        //torso.setTransform(new Vec2(5f, 10f), torso.getAngle());
     }
 }
