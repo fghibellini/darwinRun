@@ -29,7 +29,7 @@ public class AthleteRenderer implements Drawable {
         
         g.setColor(Color.red);
         g.drawString(String.format("POS: [%.2f, %.2f]", pos.x, pos.y), 10, 15);
-        g.drawString(String.format("ANG: %.2f",athlete.getAngle() / Math.PI * 180.0), 10, 30);
+        g.drawString(String.format("ANG: %.2f°",(athlete.getAngle() / Math.PI * 180.0)%360), 10, 30);
         
         g.drawRect(0, 0, bufferSize.width - 1, bufferSize.height - 1);
         

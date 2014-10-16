@@ -8,6 +8,7 @@ package cz.cvut.fit.ghibefil.darwinrun;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import org.jbox2d.common.Vec2;
@@ -68,7 +69,8 @@ public class RenderPanel extends java.awt.Canvas implements Runnable {
 
             buffer.dispose();
             strategy.show();
-            
+            Toolkit.getDefaultToolkit().sync(); // http://stackoverflow.com/a/26388175/3343425
+
             fpsCounter.tick();
             
             try { Thread.sleep(1000/60); } catch(Exception e) {}
