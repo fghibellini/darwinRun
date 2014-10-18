@@ -43,7 +43,7 @@ public class Simulation implements Runnable {
         groundBox.setAsBox(50f,5f); 
         groundBody.createFixture(groundBox, 0f);
                 
-        athlete = new Athlete(world, new Vec2(5f, 1.25f));
+        athlete = new Athlete(world, new Vec2(5f, 2f));
     }
     
     public void run() {
