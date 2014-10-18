@@ -13,8 +13,8 @@ import org.jbox2d.common.Vec2;
  * @author ghibe
  */
 public class MainWindow extends javax.swing.JFrame {
-    static int SIMULATION_HEIGHT = 10;
-    static int SIMULATION_WIDTH = 10;
+    static int SIMULATION_HEIGHT = 3;
+    static int SIMULATION_WIDTH = 5;
     
     Simulation sim;
     

@@ -33,9 +33,11 @@ public class AthleteRenderer implements Drawable {
         
         Point leftKnee = convertCoordinates(athletePoints.leftKnee, bufferSize);
         Point leftAncle = convertCoordinates(athletePoints.leftAncle, bufferSize);
+        Point leftToe = convertCoordinates(athletePoints.leftToe, bufferSize);
         
         Point rightKnee = convertCoordinates(athletePoints.rightKnee, bufferSize);
         Point rightAncle = convertCoordinates(athletePoints.rightAncle, bufferSize);
+        Point rightToe = convertCoordinates(athletePoints.rightToe, bufferSize);
         
         
         g.setColor(Color.red);
@@ -56,21 +58,25 @@ public class AthleteRenderer implements Drawable {
         g.setColor(Color.red);
         g.drawLine(hips.x, hips.y, leftKnee.x, leftKnee.y);
         g.drawLine(leftKnee.x, leftKnee.y, leftAncle.x, leftAncle.y);
+        g.drawLine(leftAncle.x, leftAncle.y, leftToe.x, leftToe.y);
         
         // rightLeg
         g.setColor(Color.red);
         g.drawLine(hips.x, hips.y, rightKnee.x, rightKnee.y);
         g.drawLine(rightKnee.x, rightKnee.y, rightAncle.x, rightAncle.y);
+        g.drawLine(rightAncle.x, rightAncle.y, rightToe.x, rightToe.y);
         
         // DEBUG RECTANGLES
-        if (true) {
+        if (false) {
             drawThickLine(g, bufferSize, athletePoints.torso, athletePoints.hips, .125f);
             
             drawThickLine(g, bufferSize, athletePoints.hips, athletePoints.leftKnee, .110f);
             drawThickLine(g, bufferSize, athletePoints.leftAncle, athletePoints.leftKnee, .110f);
+            drawThickLine(g, bufferSize, athletePoints.leftAncle, athletePoints.leftToe, .110f);
             
             drawThickLine(g, bufferSize, athletePoints.hips, athletePoints.rightKnee, .110f);
             drawThickLine(g, bufferSize, athletePoints.rightAncle, athletePoints.rightKnee, .110f);
+            drawThickLine(g, bufferSize, athletePoints.rightAncle, athletePoints.rightToe, .110f);
         }
     }
     
