@@ -5,10 +5,8 @@
  */
 package cz.cvut.fit.ghibefil.darwinrun;
 
-import java.awt.Point;
 import static java.lang.Math.cos;
 import static java.lang.Math.sin;
-import org.jbox2d.collision.broadphase.Pair;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -16,6 +14,7 @@ import org.jbox2d.dynamics.BodyDef;
 import org.jbox2d.dynamics.BodyType;
 import org.jbox2d.dynamics.FixtureDef;
 import org.jbox2d.dynamics.World;
+import org.jbox2d.dynamics.joints.Joint;
 import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 /**
@@ -31,78 +30,83 @@ public class Athlete {
     
     static final float HALF_CALF_WIDTH = 0.125f;
     
+    /* Immutable data structure */
     private static class Leg {
-        private final Body thigh;
-        private final Body calf;
-        private final Body foot;
+        public final Joint hip;
+        public final Joint knee;
+        public final Joint ankle;
+        public final Body foot;
 
-        public Leg(Body thigh, Body calf, Body foot) {
-            this.thigh = thigh;
-            this.calf = calf;
+        public Leg(Joint hip, Joint knee, Joint ankle, Body foot) {
+            this.hip = hip;
+            this.knee = knee;
+            this.ankle = ankle;
             this.foot = foot;
-        }
-
-        public Body getThigh() {
-            return thigh;
-        }
-
-        public Body getCalf() {
-            return calf;
-        }
-        
-        public Body getFoot() {
-            return foot;
         }
     }
     
     World world;
     Vec2 torsoCenter;
-    Body torso,
-         left_thigh, left_calf, left_foot,
-         right_thigh, right_calf, right_foot;
+    Body torso;
+    Leg leftLeg, rightLeg;
     
     public Athlete(World world, Vec2 torsoCenter) {
+        Leg l;
+        
         this.world = world;
         this.torsoCenter = torsoCenter;
         
-        Leg l;
-        
         torso = createTorso();
         
-        l = createLeg();
-        left_thigh = l.getThigh();
-        left_calf = l.getCalf();
-        left_foot = l.getFoot();
+        leftLeg = createLeg();
         
-        l = createLeg();
-        right_thigh = l.getThigh();
-        right_calf = l.getCalf();
-        right_foot = l.getFoot();
-        
+        rightLeg = createLeg();   
     }
     
-    public AthletePoints getPoints() {
+    public synchronized AthletePoints getPoints() {
         float torsoAngle = (float) (torso.getAngle() + Math.PI / 2.);        
         Vec2 torsoUpVector = new Vec2((float) cos(torsoAngle),(float) sin(torsoAngle)).mul(HALF_TORSO_LENGTH);
         
-        Vec2 pTorso = torso.getPosition().add(torsoUpVector),
-             pHip = torso.getPosition().add(torsoUpVector.mul(-1f));
+        Vec2 pTorso, pHip,
+             pLeftKnee, pLeftAncle,
+             pRightKnee, pRightAncle;
         
-        Vec2 pLeftKnee = radialFrom(left_thigh.getPosition(), pHip, HALF_THIGH_LENGTH);
-        Vec2 pLeftAncle = radialFrom(left_calf.getPosition(), pLeftKnee, HALF_CALF_LENGTH);
-        Vec2 pLeftToe = radialFrom(left_foot.getPosition(), pLeftAncle, HALF_FOOT_LENGTH);
+        pTorso = torso.getPosition().add(torsoUpVector);
         
-        Vec2 pRightKnee = radialFrom(right_thigh.getPosition(), pHip, HALF_THIGH_LENGTH);
-        Vec2 pRightAncle = radialFrom(right_calf.getPosition(), pRightKnee, HALF_CALF_LENGTH);
-        Vec2 pRightToe = radialFrom(right_foot.getPosition(), pRightAncle, HALF_FOOT_LENGTH);
+        pHip = new Vec2();
+        leftLeg.hip.getAnchorA(pHip);
         
+        // LEFT LEG
+        
+        pLeftKnee = new Vec2();
+        leftLeg.knee.getAnchorA(pLeftKnee);
+        
+        pLeftAncle = new Vec2();
+        leftLeg.ankle.getAnchorA(pLeftAncle);
+        
+        Vec2 pLeftToe = new Vec2();
+        leftLeg.ankle.getAnchorA(pLeftToe);
+        pLeftToe = radialFrom(leftLeg.foot.getPosition(), pLeftAncle, HALF_FOOT_LENGTH);
+        
+        // RIGHT LEG
+        
+        pRightKnee = new Vec2();
+        rightLeg.knee.getAnchorA(pRightKnee);
+        
+        pRightAncle = new Vec2();
+        rightLeg.ankle.getAnchorA(pRightAncle);
+        
+        Vec2 pRightToe = new Vec2();
+        rightLeg.ankle.getAnchorA(pRightToe);
+        pRightToe = radialFrom(rightLeg.foot.getPosition(), pRightAncle, HALF_FOOT_LENGTH);
+                
         return new AthletePoints(pTorso, pHip, null, null, null, null, pLeftKnee, pRightKnee, pLeftAncle, pRightAncle, pLeftToe, pRightToe);        
     }
     
-    private static Vec2 radialFrom(Vec2 v, Vec2 from, float distance) {
-        Vec2 direction = v.sub(from);
+    private static Vec2 radialFrom(Vec2 through, Vec2 from, float distance) {
+        Vec2 direction = through.sub(from);
         direction.normalize();
-        return v.add(direction.mulLocal(distance));
+        return through.add(direction.mulLocal(distance));
     }
     
     private Body createTorso() {
@@ -121,31 +125,26 @@ public class Athlete {
         Body calf = createRectangleBody(calfCenter, HALF_CALF_LENGTH, 0);
         Body foot = createRectangleBody(footCenter, HALF_FOOT_LENGTH, (float) -Math.PI/2f);
         
-        createRevoluteJoint(torso, thigh, hipPoint, 0, (float) Math.PI/3f);
-        createRevoluteJoint(thigh, calf, kneePoint, -(float) Math.PI/3f, 0);
-        createRevoluteJoint(calf, foot, anclePoint, 0, 0);
+        Joint hipJoint = createRevoluteJoint(torso, thigh, hipPoint, 0, (float) Math.PI/3f);
+        Joint kneeJoint = createRevoluteJoint(thigh, calf, kneePoint, -(float) Math.PI/3f, 0);
+        Joint ankleJoint = createRevoluteJoint(calf, foot, anclePoint, 0, 0);
         
-        return new Leg(thigh, calf, foot);
+        return new Leg(hipJoint, kneeJoint, ankleJoint, foot);
     }
     
-    private void createRevoluteJoint(Body a, Body b, Vec2 centerOfRevolution, float minAngle, float maxAngle) {
-        RevoluteJointDef joint = new RevoluteJointDef();
-        joint.initialize(a, b, centerOfRevolution);
-        joint.lowerAngle = minAngle;
-        joint.upperAngle = maxAngle;
-        joint.enableLimit = true;
-        world.createJoint(joint);
+    private Joint createRevoluteJoint(Body a, Body b, Vec2 centerOfRevolution, float minAngle, float maxAngle) {
+        RevoluteJointDef jointDef = new RevoluteJointDef();
+        jointDef.initialize(a, b, centerOfRevolution);
+        jointDef.lowerAngle = minAngle;
+        jointDef.upperAngle = maxAngle;
+        jointDef.enableLimit = true;
+        return world.createJoint(jointDef);
     }
     
-    public float getAngle() {
+    public float getTorsoAngle() {
         return torso.getAngle();
     }
        
-    public void reset() {
-        torso.setTransform(torsoCenter.add(new Vec2(0, 2f)), 0f);
-        
-    }
-    
     public void lift() {
         torso.applyForceToCenter(new Vec2(0f,100f));
     }
