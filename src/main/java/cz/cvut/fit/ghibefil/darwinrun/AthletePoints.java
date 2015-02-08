@@ -8,17 +8,17 @@ package cz.cvut.fit.ghibefil.darwinrun;
 import org.jbox2d.common.Vec2;
 
 /**
- *
+ * 
  * @author ghibe
  */
 public class AthletePoints {
-    public Vec2 torso;
-    public Vec2 hips;
-    public Vec2 leftElbow; Vec2 rightElbov;
-    public Vec2 leftHand; Vec2 rightHand;
-    public Vec2 leftKnee; Vec2 rightKnee;
-    public Vec2 leftAncle; Vec2 rightAncle;
-    public Vec2 leftToe; Vec2 rightToe;
+    public final Vec2 torso;
+    public final Vec2 hips;
+    public final Vec2 leftElbow; Vec2 rightElbov;
+    public final Vec2 leftHand; Vec2 rightHand;
+    public final Vec2 leftKnee; Vec2 rightKnee;
+    public final Vec2 leftAncle; Vec2 rightAncle;
+    public final Vec2 leftToe; Vec2 rightToe;
 
     public AthletePoints(Vec2 torso, Vec2 hips, Vec2 leftElbow, Vec2 rightElbov, Vec2 leftHand, Vec2 rightHand, Vec2 leftKnee, Vec2 rightKnee, Vec2 leftAncle, Vec2 rightAncle, Vec2 leftToe, Vec2 rightToe) {
         this.torso = torso;

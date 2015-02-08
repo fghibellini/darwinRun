@@ -5,7 +5,6 @@
  */
 package cz.cvut.fit.ghibefil.darwinrun;
 
-import javax.swing.JComponent;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -21,15 +20,12 @@ public class Simulation implements Runnable {
     int velocityIterations = 6;
     int positionIterations = 2;
         
-    JComponent renderer;
     World world;
     Athlete athlete;
     
     final FPSCounter rpsCounter = new FPSCounter(10);
     
     public Simulation() {
-        //this.renderer = renderer;
-        
         // gravity & world
         Vec2 g0 = new Vec2(0f, -10f);
         world = new World(g0);
@@ -46,6 +42,7 @@ public class Simulation implements Runnable {
         athlete = new Athlete(world, new Vec2(2.5f, 2f));
     }
     
+    @Override
     public void run() {
                 
         while (true) {
@@ -55,9 +52,8 @@ public class Simulation implements Runnable {
             
             try { Thread.sleep(1000/60); } catch(InterruptedException e) {}
         }
+        
     }
-    
-    //sampleRate/timeSpent = rps/1000
     
     public Athlete getRunner() {
         return athlete;

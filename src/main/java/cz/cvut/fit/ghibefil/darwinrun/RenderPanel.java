@@ -7,22 +7,19 @@ package cz.cvut.fit.ghibefil.darwinrun;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Rectangle;
 import java.awt.Toolkit;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
-import org.jbox2d.common.Vec2;
-import org.jbox2d.dynamics.Body;
 
 /**
  *
  * @author ghibe
  */
 public class RenderPanel extends java.awt.Canvas implements Runnable {
-     private BufferStrategy strategy;
-     private ArrayList<Drawable> drawables = new ArrayList<>();
-     private Simulation simulation;
-     private FPSCounter fpsCounter = new FPSCounter(40);
+    private final ArrayList<Drawable> drawables = new ArrayList<>();
+    private final FPSCounter fpsCounter = new FPSCounter(40);
+    private BufferStrategy strategy;     
+    private Simulation simulation;
     
     /**
      * Creates new form RenderPanel

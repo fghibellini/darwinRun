@@ -18,7 +18,9 @@ import org.jbox2d.dynamics.joints.Joint;
 import org.jbox2d.dynamics.joints.RevoluteJointDef;
 
 /**
- *
+ * Class representing an athlete in the box2d environment.
+ * Handles the creation of all the rigid bodies and the getters
+ * of their position.
  * @author ghibe
  */
 public class Athlete {
@@ -51,8 +53,6 @@ public class Athlete {
     Leg leftLeg, rightLeg;
     
     public Athlete(World world, Vec2 torsoCenter) {
-        Leg l;
-        
         this.world = world;
         this.torsoCenter = torsoCenter;
         
@@ -144,7 +144,10 @@ public class Athlete {
     public float getTorsoAngle() {
         return torso.getAngle();
     }
-       
+    
+    /**
+     * Applies a force to the torso (for temporary debugging purposes).
+     */
     public void lift() {
         torso.applyForceToCenter(new Vec2(0f,100f));
     }

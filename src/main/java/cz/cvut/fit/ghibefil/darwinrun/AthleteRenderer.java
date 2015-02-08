@@ -13,7 +13,7 @@ import java.awt.Point;
 import org.jbox2d.common.Vec2;
 
 /**
- *
+ * Component used to draw an athlete on a Graphics.
  * @author ghibe
  */
 public class AthleteRenderer implements Drawable {
@@ -102,7 +102,6 @@ public class AthleteRenderer implements Drawable {
         g.drawLine(B.x,B.y, D.x, D.y);
         g.drawLine(A.x,A.y, C.x, C.y);
     }
-    
     
     private Point convertCoordinates(Vec2 v, Vec2 center, Dimension bufferSize) {
         //v = v.sub(center);
