@@ -26,16 +26,18 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
         
         sim = new Simulation();    
+                
+        renderPanel1.setSimulation(sim);
+        renderPanel1.addDrawable(new AthleteRenderer(sim.getRunner()));        
+        setVisible(true);        
+        renderPanel1.initStrategy();
         
         Genotype gens = new JumpingGenotype(1f/50f);
         Puppeteer puppeteer = new JumpingPuppeteer(gens);
         
         sim.setPuppeteer(puppeteer);
         
-        renderPanel1.setSimulation(sim);
-        renderPanel1.addDrawable(new AthleteRenderer(sim.getRunner()));        
-        setVisible(true);        
-        renderPanel1.initStrategy();
+        new Thread(sim, "simulation1").start();
     }
     
     public static void main(String[] args) {
@@ -129,7 +131,7 @@ public class MainWindow extends javax.swing.JFrame {
 
     private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
         // TODO add your handling code here:
-        new Thread(sim, "simulation1").start();
+        //new Thread(sim, "simulation1").start();
     }//GEN-LAST:event_jButton1MouseClicked
 
     private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
