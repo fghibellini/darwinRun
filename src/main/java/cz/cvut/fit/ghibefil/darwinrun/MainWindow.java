@@ -35,14 +35,8 @@ public class MainWindow extends javax.swing.JFrame {
         renderPanel1.addDrawable(new AthleteRenderer(sim.getRunner()));        
         setVisible(true);        
         renderPanel1.initStrategy();
-                
-        ArrayList<ArrayList<Genotype>> genotypes = new ArrayList<>();
-        ArrayList<Genotype> generation1 = new ArrayList();
-        generation1.add(new JumpingGenotype(0f));
-        generation1.add(new JumpingGenotype(1f/50f));
-        generation1.add(new JumpingGenotype(3f/50f));
-        genotypes.add(generation1);
         
+        ArrayList<ArrayList<Genotype>> genotypes = getInitialGenotypes();
         setupTreeview(genotypes);
         
         applyGenotype(genotypes.get(0).get(0));
@@ -157,5 +151,17 @@ public class MainWindow extends javax.swing.JFrame {
         
         DefaultTreeModel treeModel = new DefaultTreeModel(top);
         genotypeTreeView.setModel(treeModel);
+    }
+
+    private ArrayList<ArrayList<Genotype>> getInitialGenotypes() {
+        ArrayList<ArrayList<Genotype>> genotypes = new ArrayList<>();
+        
+        ArrayList<Genotype> generation1 = new ArrayList();
+        generation1.add(new JumpingGenotype(0f));
+        generation1.add(new JumpingGenotype(1f/50f));
+        generation1.add(new JumpingGenotype(3f/50f));
+        genotypes.add(generation1);
+        
+        return genotypes;
     }
 }
