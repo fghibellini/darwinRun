@@ -24,16 +24,16 @@ public class FPSCounter {
             firstRunTime = System.currentTimeMillis();
         
         if (++runs==sampleRate) {
-                long deltaTime = (System.currentTimeMillis() - firstRunTime);
-                rps = (int) ((sampleRate * 1000 ) / deltaTime);
-                
-                //System.out.printf("deltaTime %d\n", deltaTime);
-                //System.out.printf("DOF %d\n", (sampleRate / deltaTime));
-                
-                // reset counters
-                runs = 0;
-                firstRunTime = System.currentTimeMillis();
-            }
+            long deltaTime = (System.currentTimeMillis() - firstRunTime);
+            rps = (int) ((sampleRate * 1000 ) / deltaTime);
+
+            //System.out.printf("deltaTime %d\n", deltaTime);
+            //System.out.printf("DOF %d\n", (sampleRate / deltaTime));
+
+            // reset counters
+            runs = 0;
+            firstRunTime = System.currentTimeMillis();
+        }
     }
     
     public int getFPS() {
