@@ -5,6 +5,10 @@
  */
 package cz.cvut.fit.ghibefil.darwinrun;
 
+import java.awt.ComponentOrientation;
+import java.util.ArrayList;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
 import org.jbox2d.common.Vec2;
 
 
@@ -31,13 +35,25 @@ public class MainWindow extends javax.swing.JFrame {
         renderPanel1.addDrawable(new AthleteRenderer(sim.getRunner()));        
         setVisible(true);        
         renderPanel1.initStrategy();
+                
+        ArrayList<ArrayList<Genotype>> genotypes = new ArrayList<>();
+        ArrayList<Genotype> generation1 = new ArrayList();
+        generation1.add(new JumpingGenotype(0f));
+        generation1.add(new JumpingGenotype(1f/50f));
+        generation1.add(new JumpingGenotype(3f/50f));
+        genotypes.add(generation1);
         
-        Genotype gens = new JumpingGenotype(1f/50f);
-        Puppeteer puppeteer = new JumpingPuppeteer(gens);
+        setupTreeview(genotypes);
         
-        sim.setPuppeteer(puppeteer);
+        applyGenotype(genotypes.get(0).get(0));
         
         new Thread(sim, "simulation1").start();
+    }
+    
+    public void applyGenotype(Genotype gen) {
+        Puppeteer puppeteer = new JumpingPuppeteer(gen);
+        
+        sim.setPuppeteer(puppeteer);
     }
     
     public static void main(String[] args) {
@@ -54,33 +70,13 @@ public class MainWindow extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         renderPanel1 = new cz.cvut.fit.ghibefil.darwinrun.RenderPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        genotypeTreeView = new javax.swing.JTree();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("DarwinRun");
-
-        jButton1.setText("Run");
-        jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton1MouseClicked(evt);
-            }
-        });
-
-        jButton2.setText("Lift");
-        jButton2.setToolTipText("");
-        jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                jButton2MouseClicked(evt);
-            }
-        });
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
-            }
-        });
 
         jPanel1.setBackground(new java.awt.Color(0, 255, 255));
 
@@ -101,6 +97,13 @@ public class MainWindow extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
+        genotypeTreeView.addTreeSelectionListener(new javax.swing.event.TreeSelectionListener() {
+            public void valueChanged(javax.swing.event.TreeSelectionEvent evt) {
+                genotypeTreeViewValueChanged(evt);
+            }
+        });
+        jScrollPane1.setViewportView(genotypeTreeView);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -108,45 +111,51 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 179, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
-
-        jButton2.getAccessibleContext().setAccessibleName("Lift");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton1MouseClicked
-        // TODO add your handling code here:
-        //new Thread(sim, "simulation1").start();
-    }//GEN-LAST:event_jButton1MouseClicked
-
-    private void jButton2MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton2MouseClicked
-        sim.getRunner().lift();        
-    }//GEN-LAST:event_jButton2MouseClicked
-
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    private void genotypeTreeViewValueChanged(javax.swing.event.TreeSelectionEvent evt) {//GEN-FIRST:event_genotypeTreeViewValueChanged
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) genotypeTreeView.getLastSelectedPathComponent();
+        if (node == null || !node.isLeaf()) return;
+        Genotype selectedGenotype = (Genotype) node.getUserObject();
+        applyGenotype(selectedGenotype);
+    }//GEN-LAST:event_genotypeTreeViewValueChanged
 
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JTree genotypeTreeView;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private cz.cvut.fit.ghibefil.darwinrun.RenderPanel renderPanel1;
     // End of variables declaration//GEN-END:variables
+
+    private void setupTreeview(ArrayList<ArrayList<Genotype>> genotypes) {
+        DefaultMutableTreeNode top = new DefaultMutableTreeNode("genotypes");
+        
+        int i = 0;
+        for (ArrayList<Genotype> generation : genotypes) {
+            DefaultMutableTreeNode generationNode = new DefaultMutableTreeNode("generation " + ++i);
+            top.add(generationNode);
+            
+            for (Genotype gene : generation) {
+                DefaultMutableTreeNode genotypeNode = new DefaultMutableTreeNode(gene);
+                generationNode.add(genotypeNode);
+            }
+        }
+        
+        DefaultTreeModel treeModel = new DefaultTreeModel(top);
+        genotypeTreeView.setModel(treeModel);
+    }
 }

@@ -15,4 +15,9 @@ public class JumpingGenotype implements Genotype {
     public JumpingGenotype(float prob) {
         this.probability = prob;
     }
+
+    @Override
+    public String toString() {
+        return "JumpingGenotype{" + "probability=" + probability + '}';
+    }
 }
