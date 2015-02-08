@@ -25,13 +25,16 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
         pack();
         
-        sim = new Simulation();        
+        sim = new Simulation();    
+        
+        Genotype gens = new JumpingGenotype(1f/50f);
+        Puppeteer puppeteer = new JumpingPuppeteer(gens);
+        
+        sim.setPuppeteer(puppeteer);
         
         renderPanel1.setSimulation(sim);
-        renderPanel1.addDrawable(new AthleteRenderer(sim.getRunner()));   
-        
-        setVisible(true);
-        
+        renderPanel1.addDrawable(new AthleteRenderer(sim.getRunner()));        
+        setVisible(true);        
         renderPanel1.initStrategy();
     }
     

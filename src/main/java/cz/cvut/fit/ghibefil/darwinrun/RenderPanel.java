@@ -49,9 +49,7 @@ public class RenderPanel extends java.awt.Canvas implements Runnable {
     
      @Override
     public void run() {
-        while (true) {
-            if (strategy==null)
-                initStrategy();
+        while (true) {            
             Graphics buffer = strategy.getDrawGraphics();
             
             buffer.setColor(Color.black);

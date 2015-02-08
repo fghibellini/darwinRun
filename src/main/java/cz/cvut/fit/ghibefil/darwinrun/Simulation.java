@@ -22,6 +22,7 @@ public class Simulation implements Runnable {
         
     World world;
     Athlete athlete;
+    Puppeteer puppeteer;
     
     final FPSCounter rpsCounter = new FPSCounter(10);
     
@@ -46,6 +47,12 @@ public class Simulation implements Runnable {
     public void run() {
                 
         while (true) {
+            
+            if (puppeteer!=null) {
+                MovementSet movements = puppeteer.move(athlete.getPoints());
+                processMovements(movements);
+            }
+            
             world.step(timeStep, velocityIterations, positionIterations);
                         
             rpsCounter.tick();
@@ -62,5 +69,14 @@ public class Simulation implements Runnable {
     public int getRps() {
         return rpsCounter.getFPS();
     }              
+
+    void setPuppeteer(Puppeteer puppeteer) {
+        this.puppeteer = puppeteer;
+    }
+
+    private void processMovements(MovementSet movements) {
+        if (movements.jump)
+            athlete.lift();
+    }
                 
 }
