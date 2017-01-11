@@ -3,8 +3,11 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.fit.ghibefil.darwinrun;
+package cz.cvut.fit.ghibefil.darwinrun.physics;
 
+import cz.cvut.fit.ghibefil.darwinrun.puppeteer.MovementSet;
+import cz.cvut.fit.ghibefil.darwinrun.puppeteer.Puppeteer;
+import cz.cvut.fit.ghibefil.darwinrun.utils.FPSCounter;
 import org.jbox2d.collision.shapes.PolygonShape;
 import org.jbox2d.common.Vec2;
 import org.jbox2d.dynamics.Body;
@@ -70,7 +73,7 @@ public class Simulation implements Runnable {
         return rpsCounter.getFPS();
     }              
 
-    void setPuppeteer(Puppeteer puppeteer) {
+    public void setPuppeteer(Puppeteer puppeteer) {
         this.puppeteer = puppeteer;
     }
 

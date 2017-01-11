@@ -72,7 +72,7 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="cz.cvut.fit.ghibefil.darwinrun.RenderPanel" name="renderPanel1">
+        <Component class="cz.cvut.fit.ghibefil.darwinrun.drawing.RenderPanel" name="renderPanel1">
         </Component>
       </SubComponents>
     </Container>

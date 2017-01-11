@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.fit.ghibefil.darwinrun;
+package cz.cvut.fit.ghibefil.darwinrun.drawing;
 
+import cz.cvut.fit.ghibefil.darwinrun.physics.Athlete;
+import cz.cvut.fit.ghibefil.darwinrun.physics.AthletePoints;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;

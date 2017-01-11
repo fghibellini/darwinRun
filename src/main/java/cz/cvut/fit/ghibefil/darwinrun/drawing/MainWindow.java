@@ -3,13 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.fit.ghibefil.darwinrun;
+package cz.cvut.fit.ghibefil.darwinrun.drawing;
 
-import java.awt.ComponentOrientation;
+import cz.cvut.fit.ghibefil.darwinrun.puppeteer.Genotype;
+import cz.cvut.fit.ghibefil.darwinrun.jumpingpuppeteer.JumpingGenotype;
+import cz.cvut.fit.ghibefil.darwinrun.jumpingpuppeteer.JumpingPuppeteer;
+import cz.cvut.fit.ghibefil.darwinrun.puppeteer.Puppeteer;
+import cz.cvut.fit.ghibefil.darwinrun.physics.Simulation;
 import java.util.ArrayList;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-import org.jbox2d.common.Vec2;
 
 
 /**
@@ -45,8 +48,7 @@ public class MainWindow extends javax.swing.JFrame {
     }
     
     public void applyGenotype(Genotype gen) {
-        Puppeteer puppeteer = new JumpingPuppeteer(gen);
-        
+        Puppeteer puppeteer = new JumpingPuppeteer(gen);        
         sim.setPuppeteer(puppeteer);
     }
     
@@ -65,7 +67,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        renderPanel1 = new cz.cvut.fit.ghibefil.darwinrun.RenderPanel();
+        renderPanel1 = new cz.cvut.fit.ghibefil.darwinrun.drawing.RenderPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
         genotypeTreeView = new javax.swing.JTree();
 
@@ -132,7 +134,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JTree genotypeTreeView;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private cz.cvut.fit.ghibefil.darwinrun.RenderPanel renderPanel1;
+    private cz.cvut.fit.ghibefil.darwinrun.drawing.RenderPanel renderPanel1;
     // End of variables declaration//GEN-END:variables
 
     private void setupTreeview(ArrayList<ArrayList<Genotype>> genotypes) {

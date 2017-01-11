@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.fit.ghibefil.darwinrun;
+package cz.cvut.fit.ghibefil.darwinrun.utils;
 
 /**
  *
@@ -26,9 +26,6 @@ public class FPSCounter {
         if (++runs==sampleRate) {
             long deltaTime = (System.currentTimeMillis() - firstRunTime);
             rps = (int) ((sampleRate * 1000 ) / deltaTime);
-
-            //System.out.printf("deltaTime %d\n", deltaTime);
-            //System.out.printf("DOF %d\n", (sampleRate / deltaTime));
 
             // reset counters
             runs = 0;

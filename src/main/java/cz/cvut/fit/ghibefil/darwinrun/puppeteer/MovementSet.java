@@ -3,17 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.fit.ghibefil.darwinrun;
+package cz.cvut.fit.ghibefil.darwinrun.puppeteer;
 
 /**
  *
  * @author ghibe
  */
 public class MovementSet {
-    boolean jump = false;
+    public final boolean jump;
     
-    public void setJump(boolean jump) {
+    public MovementSet(boolean jump) {
         this.jump = jump;
-    }
-    
+    }    
 }

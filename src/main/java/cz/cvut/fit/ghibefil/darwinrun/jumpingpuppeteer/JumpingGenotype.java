@@ -3,7 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.fit.ghibefil.darwinrun;
+package cz.cvut.fit.ghibefil.darwinrun.jumpingpuppeteer;
+
+import cz.cvut.fit.ghibefil.darwinrun.puppeteer.Genotype;
 
 /**
  *

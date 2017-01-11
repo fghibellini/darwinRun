@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package cz.cvut.fit.ghibefil.darwinrun;
+package cz.cvut.fit.ghibefil.darwinrun.physics;
 
 import org.jbox2d.common.Vec2;
 
@@ -14,11 +14,11 @@ import org.jbox2d.common.Vec2;
 public class AthletePoints {
     public final Vec2 torso;
     public final Vec2 hips;
-    public final Vec2 leftElbow; Vec2 rightElbov;
-    public final Vec2 leftHand; Vec2 rightHand;
-    public final Vec2 leftKnee; Vec2 rightKnee;
-    public final Vec2 leftAncle; Vec2 rightAncle;
-    public final Vec2 leftToe; Vec2 rightToe;
+    public final Vec2 leftElbow; public final Vec2 rightElbov;
+    public final Vec2 leftHand; public final Vec2 rightHand;
+    public final Vec2 leftKnee; public final Vec2 rightKnee;
+    public final Vec2 leftAncle; public final Vec2 rightAncle;
+    public final Vec2 leftToe; public final Vec2 rightToe;
 
     public AthletePoints(Vec2 torso, Vec2 hips, Vec2 leftElbow, Vec2 rightElbov, Vec2 leftHand, Vec2 rightHand, Vec2 leftKnee, Vec2 rightKnee, Vec2 leftAncle, Vec2 rightAncle, Vec2 leftToe, Vec2 rightToe) {
         this.torso = torso;
